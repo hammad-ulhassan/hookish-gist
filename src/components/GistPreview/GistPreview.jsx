@@ -12,19 +12,21 @@ export default function GistPreview({ gist, splitter }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    getGist(gist?.id).then((gistData) => {
+    getGist(gist?.gist?.id).then((gistData) => {
       setContent(gistData.files[Object.keys(gistData.files)[0]].content);
       setLoaded(true);
     });
-  }, []);
+  }, [gist?.gist?.id]);
 
   function navigateToGist() {
-    navigate(`/gist/${gist.id}`);
+    navigate(`/gist/${gist?.gist?.id}`);
   }
+  //split utility [todo]
 
   return (
     <GistContainer>
-      <GistMeta isInTable={false} gist={gist} />
+      {/* memoize [todo] */}
+      <GistMeta isInTable={false} gist={gist.gist} />
       <CodeView
         loaded={loaded}
         content={content?.split("\n").slice(0, (splitter||10)).join("\n")}

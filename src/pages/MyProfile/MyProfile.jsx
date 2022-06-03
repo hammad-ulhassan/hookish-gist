@@ -13,7 +13,7 @@ import {
   UserProfileWrapper,
 } from "../../shared/components/styledComponent";
 
-const UserPage = () => {
+const MyProfile = () => {
   const login = useParams();
   const [selectedUserData, setSelectedUserData] = useState(null);
   const [selectedUserGists, setSelectedUserGists] = useState([]);
@@ -78,4 +78,4 @@ const UserPage = () => {
   );
 };
 
-export default UserPage;
+export default MyProfile;

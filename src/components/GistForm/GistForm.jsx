@@ -3,10 +3,12 @@ import { PlusOutlined } from "@ant-design/icons";
 
 const GistForm = ({ formRef, files, description, onHanldeSubmitForm }) => {
   function handleOnSubmitForm(formData) {
-    onHanldeSubmitForm(formData)
+    onHanldeSubmitForm(formData);
   }
 
   return (
+    //formik [todo]
+    //yup [todo]
     <Form onFinish={handleOnSubmitForm} ref={formRef}>
       <Form.Item
         name="description"
@@ -22,7 +24,8 @@ const GistForm = ({ formRef, files, description, onHanldeSubmitForm }) => {
           return (
             <div>
               {fields.map((field, index) => (
-                <Card>
+                //split into new component [todo]
+                <Card key={index}>
                   <Form.Item
                     {...field}
                     label="Name"

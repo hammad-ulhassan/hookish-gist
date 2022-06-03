@@ -1,6 +1,6 @@
-import {  Spin } from "antd";
-import { useEffect, useMemo, useState } from "react";
-import {  useNavigate, useParams } from "react-router-dom";
+import { Spin } from "antd";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { getGist } from "../../api/gists";
 import GistCard from "../../components/GistCard/GistCard";
 import GistMeta from "../../components/GistMeta/GistMeta";
@@ -11,53 +11,28 @@ import {
   HomePageLayout,
 } from "../../shared/components/styledComponent";
 
-export const GistPage = ({ isLoggedIn, authUserData }) => {
+export const GistPage = ({
+  isLoggedIn,
+  authUserData,
+  selectedGistAllData,
+  setSelectedGistAllData,
+}) => {
   let { id } = useParams();
-  const [selectedGistAllData, setSelectedGistAllData] = useState(null);
-  const [loaded, setLoaded] = useState(false);
+  // const [selectedGistAllData, setSelectedGistAllData] = useState(null);
+  const [loaded, setLoaded] = useState(false); //make another loader, [todo]
   const navigate = useNavigate();
   const [showPersonalControls, setShowPersonalControls] = useState(false);
   // let location = useLocation();
 
-  function editGist() {
+  const editGist = useCallback(()=>{
     navigate(`/edit/${selectedGistAllData.id}`);
-  }
+  })
 
-  function deleteGist() {
-    // this.props.deleteGist();
-    // if (this.props.gistDeleteStatus === "succeeded") {
-    //   this.props.fetchAuthUserGists();
-    //   this.props.navigate("/home");
-    // }
-  }
+  function deleteGist() {}
 
-  function forkGist() {
-    // forkGist(selectedGistAllData?.id).then((res) => {
-    //   if (res.status === 201) {
-    //     notification.open({
-    //       message: "Gist Forked",
-    //     });
-    //   } else {
-    //     notification.open({
-    //       message: "Some Error Occured",
-    //     });
-    //   }
-    // });
-  }
+  function forkGist() {}
 
-  function starGist() {
-    // starGist(selectedGistAllData?.id).then((res) => {
-    //   if (res.status === 204) {
-    //     notification.open({
-    //       message: "Gist Starred",
-    //     });
-    //   } else {
-    //     notification.open({
-    //       message: "Some Error Occured",
-    //     });
-    //   }
-    // });
-  }
+  function starGist() {}
 
   useEffect(() => {
     getGist(id).then((data) => {

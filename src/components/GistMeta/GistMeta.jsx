@@ -16,7 +16,7 @@ export default function GistMeta({ isInTable, gist }) {
         <GistDetails>
           <span>
             <Link to={`/user/${gist?.owner?.login}`}>{`@${gist?.owner?.login}/`}</Link>
-            <Link to="">{gist?.files[Object.keys(gist.files)[0]]?.filename}</Link>
+            <Link to="">{gist?.files[Object.keys(gist?.files)[0]]?.filename}</Link>
           </span>
           <Text type="secondary">{moment(gist?.created_at).fromNow()}</Text>
           <Text type="secondary">{gist?.description?.slice(0, 20)}</Text>
