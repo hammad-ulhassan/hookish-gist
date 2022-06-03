@@ -3,6 +3,7 @@ import { Button, Card as AntCard } from "antd";
 import { Link } from "react-router-dom";
 import { Input as antInput } from "antd";
 
+//split [todo]
 
 export const CreatedAtText = styled.span`
   font-style: normal;

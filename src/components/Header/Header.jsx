@@ -1,10 +1,20 @@
 import { Avatar, Button, Dropdown } from "antd";
-import { Link } from "react-router-dom";
+import { useCallback } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { AvatarWrapper, CFSWrapper, ContentWrapper, CSBWrapper, SearchBox } from "../../shared/components/styledComponent";
 import Logo from "../Logo/Logo";
 import './Header.css'
 
 const Header = ({isLoggedIn, authUserData}) => {
+  // let [, setSearchParams] = useSearchParams('');
+  let navigate = useNavigate();
+
+  const handleOnSearch = useCallback((user)=>{
+    // setSearchParams({user});
+    navigate(`/search?user=${user}`)
+  },[navigate])
+
+
   return (
     <header className="header-style emumba-bg">
       <ContentWrapper>
@@ -16,7 +26,8 @@ const Header = ({isLoggedIn, authUserData}) => {
             <SearchBox.Search
               placeholder="Search..."
               allowClear
-              onSearch={null}
+              onSearch={handleOnSearch}
+              enterButton={true}
             />
             {!(isLoggedIn && authUserData) ? (
               <Button onClick={null}>Login</Button>

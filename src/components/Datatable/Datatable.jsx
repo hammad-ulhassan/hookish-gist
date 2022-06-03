@@ -1,10 +1,8 @@
-import { Button, Table, Tag } from "antd";
-import { CSAWrapper } from "../../shared/components/styledComponent";
-import { StarOutlined, ForkOutlined } from "@ant-design/icons";
+import { Table, Tag } from "antd";
 import GistMeta from "../GistMeta/GistMeta";
 import { useNavigate } from "react-router-dom";
 
-export default function Datatable({ data, selectedRowKeys, loading }) {
+export default function Datatable({ data, selectedRowKeys, loading, onPageChange }) {
 
   let navigate = useNavigate();
 
@@ -69,7 +67,7 @@ export default function Datatable({ data, selectedRowKeys, loading }) {
         defaultPageSize: 10,
         showSizeChanger: true,
         total: 1000,
-        onChange: null,
+        onChange: (page, pageSize)=>onPageChange(page, pageSize),
       }}
       onRow={(record, rowIndex) => {
         return {

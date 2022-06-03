@@ -3,7 +3,6 @@ import SyntaxHighlighter from "react-syntax-highlighter";
 import { CodeBlock } from "../../shared/components/styledComponent";
 
 export default function CodeView({ content, loaded, navigateToGist }) {
-  console.log(content)
   return (
     <CodeBlock onClick={()=>navigateToGist()}>
       {loaded ? (

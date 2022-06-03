@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { getAllPublicGists } from "../../api/gists";
+import { useSearchParams } from "react-router-dom";
+import { getUserGists } from "../../api/gists";
 import BtnGrp from "../../components/BtnGrp/BtnGrp";
 import Datatable from "../../components/Datatable/Datatable";
 import {
@@ -7,23 +8,24 @@ import {
   HomePageLayout,
 } from "../../shared/components/styledComponent";
 
-export default function Homepage() {
+const SearchPage = () => {
   const [view, setView] = useState("table");
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  let [searchParams] = useSearchParams();
 
   const viewChange = useCallback((view) => {
     setView(view);
   }, []);
 
   useEffect(() => {
-    getAllPublicGists(page, pageSize).then((data) => {
+    getUserGists(searchParams.get("user")).then((data) => {
       setData(data);
       setLoading(false);
     });
-  }, [page, pageSize]);
+  }, [searchParams]);
 
   const onPageChange = useCallback((page, pageSize) => {
     setPage(page);
@@ -37,7 +39,6 @@ export default function Homepage() {
       </CFEWrapper>
       <div>
         {view === "table" ? (
-          //memoize this [todo]
           <Datatable
             data={data}
             loading={loading}
@@ -49,4 +50,6 @@ export default function Homepage() {
       </div>
     </HomePageLayout>
   );
-}
+};
+
+export default SearchPage;

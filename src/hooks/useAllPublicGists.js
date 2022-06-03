@@ -1,24 +1,18 @@
 import moment from "moment";
 import { useEffect, useState } from "react";
+import headers from "../credentials";
 
-function useAllPublicGists(page) {
+function useAllPublicGists(page=1) {
   const [isLoading, setIsLoading] = useState(true);
   const [gists, setGists] = useState([]);
 
-  function getHeaders() {
-    const reqHeaders = {
-      Authorization: "Bearer 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",
-      Accept: "application/json",
-    };
-    const headers = new Headers(reqHeaders);
-    return headers;
-  }
+  //remove ue, make function [todo]
 
-  useEffect(() => {
+  useEffect(() => { //wronggggg
     fetch(
       "https://api.github.com/gists/public?" +
         new URLSearchParams({ per_page: 10, page: page }),
-      { headers: getHeaders() }
+      { headers: headers() }
     )
       .then((res) => res.json())
       .then((gists) =>
@@ -41,3 +35,5 @@ function useAllPublicGists(page) {
   return [isLoading, gists]
 }
 export default useAllPublicGists;
+
+//memoize components [todo]

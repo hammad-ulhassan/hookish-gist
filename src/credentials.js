@@ -1,8 +1,8 @@
 
-
+//make env [todo]
 export default function headers(){
   const reqHeaders = {
-    Authorization: "Bearer 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",
+    Authorization: "Bearer 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",
     Accept: "application/json"
   };
   const headers = new Headers(reqHeaders);
