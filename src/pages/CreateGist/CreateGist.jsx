@@ -2,6 +2,7 @@ import { notification } from "antd";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createGist } from "../../api/gists";
+import CreateGistForm from "../../components/CreateGistForm/CreateGistForm";
 import GistForm from "../../components/GistForm/GistForm";
 import {
   CFSWrapper,
@@ -75,9 +76,10 @@ const CreateGist = () => {
       <CFSWrapper>
         <h2>Create Gist</h2>
       </CFSWrapper>
-      <GistForm
+      {/* <GistForm
         onHanldeSubmitForm={onCreateGist}
-      />
+      /> */}
+      <CreateGistForm onHanldeSubmitForm={onCreateGist}/>
     </HomePageLayout>
   );
 };
