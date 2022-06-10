@@ -239,3 +239,9 @@ export const GistMetaData = styled.section`
   padding: 1%;
 `;
 
+export const ProfileTopRow = styled.section`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+`;

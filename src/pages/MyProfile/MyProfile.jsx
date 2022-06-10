@@ -1,11 +1,11 @@
 import { Avatar, Button, notification, Spin, Typography } from "antd";
 import { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getUserGists } from "../../api/gists";
 import { getUser } from "../../api/user";
 import GistPreview from "../../components/GistPreview/GistPreview";
 import {
-  CFSWrapper,
+  ProfileTopRow,
   FCFCWrapper,
   HomePageLayout,
   TextWordBreak,
@@ -31,6 +31,7 @@ const MyProfile = () => {
   const userData = useSelector(selectAuthUserData);
   const authUserGistsStatus = useSelector(selectAuthUserGistsStatus);
   const authUserGists = useSelector(selectAuthUserGists);
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(fetchAuthUserData());
@@ -64,11 +65,16 @@ const MyProfile = () => {
     window.open(`https://github.com/${userData?.login}`);
   }, [userData]);
 
+  const navigateToCreateGist = useCallback(()=>{
+    navigate("/create");
+  })
+
   return (
     <HomePageLayout>
-      <CFSWrapper>
+      <ProfileTopRow>
         <h2>User Gists</h2>
-      </CFSWrapper>
+        <Button onClick={navigateToCreateGist}>Create Gist</Button>
+      </ProfileTopRow>
       <UserProfileWrapper>
         <FCFCWrapper>
           <Avatar size={200} src={userData?.avatar_url} />

@@ -13,7 +13,7 @@ import {
 } from "./constants";
 import InputTextArea from "../InputTextArea/InputTextArea";
 
-export default function GistCreationForm({ description, files }) {
+export default function GistCreationForm({ description, files, onSubmitForm}) {
   const initalValues = {
     description: description ?? "",
     files: files ?? [],
@@ -25,10 +25,7 @@ export default function GistCreationForm({ description, files }) {
         initialValues={initalValues}
         validationSchema={validationSchema}
         onSubmit={(values, actions) => {
-          setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
-            actions.setSubmitting(false);
-          }, 1000);
+          onSubmitForm(values)
         }}
       >
         {({ values, handleSubmit }) => (

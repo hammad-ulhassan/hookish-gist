@@ -1,14 +1,13 @@
 import { notification } from "antd";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createGist } from "../../api/gists";
-import CreateGistForm from "../../components/CreateGistForm/CreateGistForm";
 import GistCreationForm from "../../components/GistCreationForm/GistCreationForm";
-import GistForm from "../../components/GistForm/GistForm";
 import {
   CFSWrapper,
   HomePageLayout,
 } from "../../shared/components/styledComponent";
+import {createGist} from '../../redux/gistsStore/thunk';
+import {useDispatch} from 'react-redux';
 
 // eslint-disable-next-line no-extend-native
 // Object.prototype['isEmpty']=function(){
@@ -18,6 +17,8 @@ import {
 const CreateGist = () => {
   const [values, setValues] = useState({});
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
 
   //   const transformedData = useMemo(() => {
   //     let fileContentMap = new Map();
@@ -37,13 +38,6 @@ const CreateGist = () => {
     setValues(data);
   }, []);
 
-  //   useEffect(() => {
-  //     createGist(transformedData).then((e) => {
-  //       notification.open({
-  //         message: "Gist created",
-  //       });
-  //     });
-  //   }, [transformedData]);
 
   useEffect(() => {
     if (Object.keys(values).length !== 0) {
@@ -56,33 +50,18 @@ const CreateGist = () => {
         public: true,
         files: Object.fromEntries(fileContentMap),
       };
-      createGist(gistPostData)
-        .then((e) => {
-          notification.open({
-            message: "Gist created",
-          });
-          navigate('/home')
-        })
-        .catch((err) => {
-          notification.open({
-            message: "Some error occured while creating gist",
-          });
-          navigate('/home')
-        });
+      dispatch(createGist(gistPostData));
+    navigate("/home");
+
     }
-  }, [navigate, values]);
+  }, [dispatch, navigate, values]);
 
   return (
     <HomePageLayout>
       <CFSWrapper>
         <h2>Create Gist</h2>
       </CFSWrapper>
-      {/* <GistForm
-        onHanldeSubmitForm={onCreateGist}
-      /> */}
-      {/* <CreateGistForm onHanldeSubmitForm={onCreateGist}/>
-       */}
-       <GistCreationForm/>
+      <GistCreationForm onSubmitForm={onCreateGist}/>
     </HomePageLayout>
   );
 };

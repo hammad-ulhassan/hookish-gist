@@ -1,7 +1,6 @@
 import { notification } from "antd";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { editGist } from "../../api/gists";
 import GistCreationForm from "../../components/GistCreationForm/GistCreationForm";
 import GistForm from "../../components/GistForm/GistForm";
 import {
@@ -14,6 +13,7 @@ import {
   selectedGistAllData,
 } from "../../redux/gistsStore/selectors";
 import { useSelector, useDispatch } from "react-redux";
+import {editGist} from '../../redux/gistsStore/thunk'
 
 
 const EditGist = () => {
@@ -23,6 +23,7 @@ const EditGist = () => {
   const navigate = useNavigate();
   const selectedGistAllDataStatus = useSelector(selectAllDataStatus);
   const gistAllData = useSelector(selectedGistAllData);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     //add to utility [todo]
@@ -48,27 +49,17 @@ const EditGist = () => {
       public: true,
       files: Object.fromEntries(fileContentMap),
     };
-    // editGist(gistPostData).then(e=>{
-    //   notification.open({
-    //     message:"edited"
-    //   })
-    // });
+    dispatch(editGist(gistPostData))
 
     navigate("/home");
-  },[navigate]);
+  },[dispatch, navigate]);
 
   return (
     <HomePageLayout>
       <CFSWrapper>
         <h2>Edit Gist</h2>
       </CFSWrapper>
-      {/* <GistForm
-        onHanldeSubmitForm={onEditGist}
-        formRef={formRef}
-        files={files}
-        description={description}
-      /> */}
-      <GistCreationForm description={description} files={files}/>
+      <GistCreationForm description={description} files={files} onSubmitForm={onEditGist}/>
     </HomePageLayout>
   );
 };
