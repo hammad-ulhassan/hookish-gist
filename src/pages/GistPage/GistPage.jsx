@@ -1,12 +1,11 @@
 import { Spin } from "antd";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getGist } from "../../api/gists";
 import GistCard from "../../components/GistCard/GistCard";
 import GistMeta from "../../components/GistMeta/GistMeta";
 import GistUtils from "../../components/GistUtils/GistUtils";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchSelectedGistData } from "../../redux/gistsStore/thunk";
+import { fetchSelectedGistData, forkGist, starGist } from "../../redux/gistsStore/thunk";
 import {
   selectSelectedGist,
   selectAllDataStatus,
@@ -37,11 +36,17 @@ export const GistPage = () => {
     navigate(`/edit/${gistAllData.id}`);
   }, [navigate, gistAllData]);
 
-  function deleteGist() {}
+  function deleteGist() {
 
-  function forkGist() {}
+  }
 
-  function starGist() {}
+  function onForkGist() {
+    dispatch(forkGist(gistAllData.id))
+  }
+
+  function onStarGist() {
+    dispatch(starGist(gistAllData.id))
+  }
 
   useEffect(() => {
     if (selectedGist) {
@@ -65,14 +70,6 @@ export const GistPage = () => {
     }
   }, [gistAllData, selectedGistAllDataStatus, authUserData, isLoggedIn]);
 
-  // useMemo(() => {
-  //   if (isLoggedIn === true) {
-  //     if (authUserData?.id === gistAllData?.owner?.id) {
-  //       setShowPersonalControls(true);
-  //     }
-  //   }
-  // }, [authUserData, isLoggedIn, gistAllData]);
-
   return (
     <HomePageLayout>
       <CSBWrapper>
@@ -84,8 +81,8 @@ export const GistPage = () => {
             isLoggedIn={isLoggedIn}
             handleGistEdit={editGist}
             handleGistDelete={deleteGist}
-            handleForkGist={forkGist}
-            handleGistStar={starGist}
+            handleForkGist={onForkGist}
+            handleGistStar={onStarGist}
           />
         ) : null}
       </CSBWrapper>

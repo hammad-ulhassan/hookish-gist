@@ -1,9 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import moment from "moment";
-import headers from "../../credentials";
 import { selectSelectedGist } from "./selectors";
-
-const myHeaders = new Headers(headers);
 
 export const fetchPublicGists = createAsyncThunk(
   "gist/fetchPublicGists",
@@ -12,7 +9,13 @@ export const fetchPublicGists = createAsyncThunk(
     const res = await fetch(
       "https://api.github.com/gists/public?" +
         new URLSearchParams({ per_page: per_page, page: page }),
-      { method: "get", headers: myHeaders }
+      {
+        method: "get",
+        headers: new Headers({
+          Authorization: `Bearer ${process.env.REACT_APP_ACCESS_TOKEN}`,
+          Accept: "application/json",
+        }),
+      }
     );
     const response = await res.json();
     const resp = await response.map((gist) => {
@@ -36,7 +39,10 @@ export const fetchSelectedGistData = createAsyncThunk(
       `https://api.github.com/gists/${selectSelectedGist(getState())?.id}`,
       {
         method: "get",
-        headers: myHeaders,
+        headers: new Headers({
+          Authorization: `Bearer ${process.env.REACT_APP_ACCESS_TOKEN}`,
+          Accept: "application/json",
+        }),
       }
     );
     const response = await res.json();
@@ -49,7 +55,14 @@ export const editGist = createAsyncThunk(
   async (postData, { getState }) => {
     const res = await fetch(
       `https://api.github.com/gists/${selectSelectedGist(getState())?.id}`,
-      { method: "patch", headers: myHeaders, body: JSON.stringify(postData) }
+      {
+        method: "patch",
+        headers: new Headers({
+          Authorization: `Bearer ${process.env.REACT_APP_ACCESS_TOKEN}`,
+          Accept: "application/json",
+        }),
+        body: JSON.stringify(postData),
+      }
     );
     const response = await res.json();
     return response;
@@ -65,7 +78,13 @@ export const deleteGist = createAsyncThunk(
   async (_, { getState }) => {
     const res = await fetch(
       `https://api.github.com/gists/${selectSelectedGist(getState())?.id}`,
-      { method: "delete", headers: myHeaders }
+      {
+        method: "delete",
+        headers: new Headers({
+          Authorization: `Bearer ${process.env.REACT_APP_ACCESS_TOKEN}`,
+          Accept: "application/json",
+        }),
+      }
     );
     const response = await res.json();
     return response;
@@ -77,7 +96,10 @@ export const starGist = createAsyncThunk(
   async (gistId, { getState }) => {
     const res = await fetch(` https://api.github.com/gists/${gistId}/star`, {
       method: "put",
-      headers: myHeaders,
+      headers: new Headers({
+        Authorization: `Bearer ${process.env.REACT_APP_ACCESS_TOKEN}`,
+        Accept: "application/json",
+      }),
     });
     const response = await res.json();
     return response;
@@ -85,11 +107,14 @@ export const starGist = createAsyncThunk(
 );
 
 export const forkGist = createAsyncThunk(
-  "gist/starGist",
+  "gist/forkGist",
   async (gistId, { getState }) => {
     const res = await fetch(` https://api.github.com/gists/${gistId}/star`, {
       method: "put",
-      headers: myHeaders,
+      headers: new Headers({
+        Authorization: `Bearer ${process.env.REACT_APP_ACCESS_TOKEN}`,
+        Accept: "application/json",
+      }),
     });
     const response = await res.json();
     return response;

@@ -7,6 +7,7 @@ import {
   deleteGist,
   createGist,
   starGist,
+  forkGist,
 } from "./thunk";
 
 const initialState = {
@@ -22,6 +23,8 @@ const initialState = {
   deleteGistResponse: null,
   createGistStatus: "idle",
   createGistResponse: null,
+  starGistStatus:"idle",
+  forkGistStatus:"idle"
 };
 
 export const gistSlice = createSlice({
@@ -65,9 +68,11 @@ export const gistSlice = createSlice({
         state.createGistResponse = action.payload;
       })
       .addCase(starGist.fulfilled, (state, action) => {
-        state.createGistStatus = "succeeded";
-        state.createGistResponse = action.payload;
-      });
+        state.starGistStatus = "succeeded";
+      })
+      .addCase(forkGist.fulfilled, (state, action) => {
+        state.forkGistStatus = "succeeded";
+      })
   },
 });
 

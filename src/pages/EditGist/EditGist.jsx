@@ -13,8 +13,9 @@ import {
   selectedGistAllData,
 } from "../../redux/gistsStore/selectors";
 import { useSelector, useDispatch } from "react-redux";
-import {editGist} from '../../redux/gistsStore/thunk'
-
+import { editGist } from "../../redux/gistsStore/thunk";
+import transformGistForEdit from "../../utils/transformGistForEdit";
+import transformGistFormDataForPost from "../../utils/transformGistFormDataForPost";
 
 const EditGist = () => {
   const [description, setDescription] = useState(null);
@@ -26,40 +27,31 @@ const EditGist = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    //add to utility [todo]
-    var transformed = { description: null, files: [] };
-    transformed.description = gistAllData.description;
-    Object.keys(gistAllData.files).forEach((file) =>
-      transformed.files.push({
-        filename: file,
-        content: gistAllData.files[file].content,
-      })
-    );
+    let transformed = transformGistForEdit(gistAllData);
     setDescription(transformed.description);
     setFiles(transformed.files);
   }, []);
 
-  const onEditGist = useCallback((values) => {
-    let fileContentMap = new Map();
-    values.files.forEach((file) =>
-      fileContentMap.set(file.filename, { content: file.content })
-    );
-    const gistPostData = {
-      description: values.description,
-      public: true,
-      files: Object.fromEntries(fileContentMap),
-    };
-    dispatch(editGist(gistPostData))
+  const onEditGist = useCallback(
+    (values) => {
+      var gistPostData = transformGistFormDataForPost(values);
+      dispatch(editGist(gistPostData));
 
-    navigate("/home");
-  },[dispatch, navigate]);
+      navigate("/home");
+    },
+    [dispatch, navigate]
+  );
 
   return (
     <HomePageLayout>
       <CFSWrapper>
         <h2>Edit Gist</h2>
       </CFSWrapper>
-      <GistCreationForm description={description} files={files} onSubmitForm={onEditGist}/>
+      <GistCreationForm
+        description={description}
+        files={files}
+        onSubmitForm={onEditGist}
+      />
     </HomePageLayout>
   );
 };
