@@ -1,10 +1,15 @@
 import { Table, Tag } from "antd";
 import GistMeta from "../GistMeta/GistMeta";
+import React from "react";
 import { useNavigate } from "react-router-dom";
+import './Datatable.css';
+import { useDispatch } from "react-redux";
+import { selectedGist } from "../../redux/gistsStore/actions";
 
-export default function Datatable({ data, selectedRowKeys, loading, onPageChange }) {
+function Datatable({ data, selectedRowKeys, loading, onPageChange }) {
 
   let navigate = useNavigate();
+  let dispatch = useDispatch();
 
   const columns = [
     {
@@ -72,10 +77,13 @@ export default function Datatable({ data, selectedRowKeys, loading, onPageChange
       onRow={(record, rowIndex) => {
         return {
           onClick: (event) => {
-            navigate(`/gist/${record.gist.id}`)
+            navigate(`/gist/${record.gist.id}`);
+            dispatch(selectedGist(record.gist))
           },
         };
       }}
     />
   );
 }
+
+export default React.memo(Datatable)

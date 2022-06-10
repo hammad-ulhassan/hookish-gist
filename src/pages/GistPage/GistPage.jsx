@@ -5,28 +5,37 @@ import { getGist } from "../../api/gists";
 import GistCard from "../../components/GistCard/GistCard";
 import GistMeta from "../../components/GistMeta/GistMeta";
 import GistUtils from "../../components/GistUtils/GistUtils";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchSelectedGistData } from "../../redux/gistsStore/thunk";
+import {
+  selectSelectedGist,
+  selectAllDataStatus,
+  selectedGistAllData,
+} from "../../redux/gistsStore/selectors";
 import {
   ColFSWrapper,
   CSBWrapper,
   HomePageLayout,
 } from "../../shared/components/styledComponent";
+import {
+  selectIsLoggedIn,
+  selectAuthUserData,
+} from "../../redux/credentialStore/selectors";
 
-export const GistPage = ({
-  isLoggedIn,
-  authUserData,
-  selectedGistAllData,
-  setSelectedGistAllData,
-}) => {
-  let { id } = useParams();
-  // const [selectedGistAllData, setSelectedGistAllData] = useState(null);
-  const [loaded, setLoaded] = useState(false); //make another loader, [todo]
+export const GistPage = () => {
+  const [loaded, setLoaded] = useState(false); 
   const navigate = useNavigate();
   const [showPersonalControls, setShowPersonalControls] = useState(false);
-  // let location = useLocation();
+  const selectedGist = useSelector(selectSelectedGist);
+  const selectedGistAllDataStatus = useSelector(selectAllDataStatus);
+  const gistAllData = useSelector(selectedGistAllData);
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector(selectIsLoggedIn);
+  const authUserData = useSelector(selectAuthUserData);
 
-  const editGist = useCallback(()=>{
-    navigate(`/edit/${selectedGistAllData.id}`);
-  })
+  const editGist = useCallback(() => {
+    navigate(`/edit/${gistAllData.id}`);
+  }, [navigate, gistAllData]);
 
   function deleteGist() {}
 
@@ -35,29 +44,39 @@ export const GistPage = ({
   function starGist() {}
 
   useEffect(() => {
-    getGist(id).then((data) => {
-      setSelectedGistAllData(data);
-      setLoaded(true);
-    });
-  }, [id]);
+    if (selectedGist) {
+      dispatch(fetchSelectedGistData());
+    }
+  }, [dispatch, selectedGist]);
 
-  useMemo(() => {
-    if (isLoggedIn === true) {
-      if (authUserData?.id === selectedGistAllData?.owner?.id) {
-        setShowPersonalControls(true);
+  useEffect(() => {
+    if (selectedGistAllDataStatus !== "succeeded") {
+      setLoaded(false);
+    } else {
+      setLoaded(true);
+      if (isLoggedIn === true) {
+        if (authUserData?.id === gistAllData?.owner?.id) {
+          setShowPersonalControls(true);
+        }
       }
     }
-  }, [authUserData?.id, isLoggedIn, selectedGistAllData?.owner?.id]);
+  }, [selectedGistAllDataStatus]);
+
+  // useMemo(() => {
+  //   if (isLoggedIn === true) {
+  //     if (authUserData?.id === gistAllData?.owner?.id) {
+  //       setShowPersonalControls(true);
+  //     }
+  //   }
+  // }, [authUserData, isLoggedIn, gistAllData]);
 
   return (
     <HomePageLayout>
       <CSBWrapper>
-        {loaded ? (
-          <GistMeta isInTable={false} gist={selectedGistAllData} />
-        ) : null}
+        {loaded ? <GistMeta isInTable={false} gist={gistAllData} /> : null}
         {loaded ? (
           <GistUtils
-            forks={selectedGistAllData?.forks}
+            forks={gistAllData?.forks}
             showPersonalControls={showPersonalControls}
             isLoggedIn={isLoggedIn}
             handleGistEdit={editGist}
@@ -69,8 +88,8 @@ export const GistPage = ({
       </CSBWrapper>
       <ColFSWrapper gap="0.5vh">
         {loaded ? (
-          Object.keys(selectedGistAllData?.files)
-            .map((fn) => selectedGistAllData?.files[fn])
+          Object.keys(gistAllData?.files)
+            .map((fn) => gistAllData?.files[fn])
             .map((file, index) => (
               <GistCard
                 style={{ minWidth: "100%", margin: "1%" }}

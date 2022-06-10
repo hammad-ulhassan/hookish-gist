@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createGist } from "../../api/gists";
 import CreateGistForm from "../../components/CreateGistForm/CreateGistForm";
+import GistCreationForm from "../../components/GistCreationForm/GistCreationForm";
 import GistForm from "../../components/GistForm/GistForm";
 import {
   CFSWrapper,
@@ -79,7 +80,9 @@ const CreateGist = () => {
       {/* <GistForm
         onHanldeSubmitForm={onCreateGist}
       /> */}
-      <CreateGistForm onHanldeSubmitForm={onCreateGist}/>
+      {/* <CreateGistForm onHanldeSubmitForm={onCreateGist}/>
+       */}
+       <GistCreationForm/>
     </HomePageLayout>
   );
 };

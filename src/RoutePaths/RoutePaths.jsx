@@ -4,6 +4,7 @@ import CreateGist from "../pages/CreateGist/CreateGist";
 import EditGist from "../pages/EditGist/EditGist";
 import { GistPage } from "../pages/GistPage/GistPage";
 import Homepage from "../pages/Homepage/Homepage";
+import LoginPage from "../pages/LoginPage/LoginPage";
 import MainLayout from "../pages/MainLayout/MainLayout";
 import MyProfile from "../pages/MyProfile/MyProfile";
 import SearchPage from "../pages/SearchPage/SearchPage";
@@ -40,6 +41,7 @@ export const RoutePaths = () => {
             element={<EditGist selectedGistAllData={selectedGistAllData} />}
           />
         </Route>
+        <Route path="/login" element={<LoginPage/>}/>
       </Route>
     </Routes>
   );

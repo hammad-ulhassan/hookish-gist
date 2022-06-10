@@ -12,37 +12,57 @@ import {
   UserProfileGistsList,
   UserProfileWrapper,
 } from "../../shared/components/styledComponent";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchAuthUserData,
+  fetchAuthUserGists,
+} from "../../redux/credentialStore/thunk";
+import {
+  selectAuthUserData,
+  selectAuthUserDataStatus,
+  selectAuthUserGists,
+  selectAuthUserGistsStatus,
+} from "../../redux/credentialStore/selectors";
 
 const MyProfile = () => {
-  const login = useParams();
-  const [selectedUserData, setSelectedUserData] = useState(null);
-  const [selectedUserGists, setSelectedUserGists] = useState([]);
   const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const userDataStatus = useSelector(selectAuthUserDataStatus);
+  const userData = useSelector(selectAuthUserData);
+  const authUserGistsStatus = useSelector(selectAuthUserGistsStatus);
+  const authUserGists = useSelector(selectAuthUserGists);
 
   useEffect(() => {
-    getUser(login).then((data) => {
-      setSelectedUserData(data);
-    });
-  }, [login]);
+    dispatch(fetchAuthUserData());
+    dispatch(fetchAuthUserGists());
+  }, [dispatch]);
+
+  // useEffect(() => {
+  //   if (userDataStatus !== "succeeded") {
+  //     setLoading(true);
+  //   } else {
+  //     setSelectedUserData(userData);
+  //     if (authUserGistsStatus !== "succeeded") {
+  //       setLoading(true);
+  //     } else {
+  //       setLoading(false);
+  //       setSelectedUserGists(authUserGists);
+  //     }
+  //   }
+  // }, [authUserGists, authUserGistsStatus, userData, userDataStatus]);
 
   useEffect(() => {
-    if (selectedUserData) {
-      getUserGists(selectedUserData?.login)
-        .then((gists) => {
-          setSelectedUserGists(gists);
-          setLoading(false);
-        })
-        .catch((err) => {
-          notification.open({
-            message: "Error while fetching gists for this user",
-          });
-        });
+    if(userDataStatus === "succeeded"){
+      setLoading(false)
     }
-  }, [selectedUserData]);
+    if(authUserGistsStatus === "succeeded"){
+      setLoading(false)
+    }
+  }, [userDataStatus, authUserGistsStatus]);
 
-  const navigateToProfile = useCallback(()=> {
-    window.open(`https://github.com/${selectedUserData?.login}`);
-  },[selectedUserData])
+  const navigateToProfile = useCallback(() => {
+    window.open(`https://github.com/${userData?.login}`);
+  }, [userData]);
 
   return (
     <HomePageLayout>
@@ -51,15 +71,15 @@ const MyProfile = () => {
       </CFSWrapper>
       <UserProfileWrapper>
         <FCFCWrapper>
-          <Avatar size={200} src={selectedUserData?.avatar_url} />
+          <Avatar size={200} src={userData?.avatar_url} />
           <TextWordBreak>
             <Typography.Title level={4}>
-              {selectedUserData?.name}
+              {userData?.name}
             </Typography.Title>
           </TextWordBreak>
           <TextWordBreak>
             <Typography.Title level={5}>
-              {selectedUserData?.bio}
+              {userData?.bio}
             </Typography.Title>
           </TextWordBreak>
           <Button onClick={navigateToProfile}>GitHub Profile</Button>
@@ -68,7 +88,9 @@ const MyProfile = () => {
           {loading ? (
             <Spin size="large" />
           ) : (
-            selectedUserGists.length>0 && selectedUserGists.map((gist, index) => (
+            // JSON.stringify(authUserGists)
+            authUserGists?.length > 0 &&
+            authUserGists?.map((gist, index) => (
               <GistPreview gist={gist} key={index} />
             ))
           )}

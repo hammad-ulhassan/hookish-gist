@@ -1,7 +1,8 @@
 import { Radio } from 'antd';
+import React from 'react';
 import { UnorderedListOutlined, AppstoreOutlined } from '@ant-design/icons';
 
-export default function BtnGrp({view, onViewChange}) {
+function BtnGrp({view, onViewChange}) {
   return (
     <Radio.Group
       value={view}
@@ -17,3 +18,5 @@ export default function BtnGrp({view, onViewChange}) {
     </Radio.Group>
   );
 }
+
+export default React.memo(BtnGrp)

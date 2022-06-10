@@ -69,7 +69,7 @@ const UserPage = () => {
             <Spin size="large" />
           ) : (
             selectedUserGists.length>0 && selectedUserGists.map((gist, index) => (
-              <GistPreview gist={gist} key={index} />
+              <GistPreview gist={gist.gist} key={index} />
             ))
           )}
         </UserProfileGistsList>
