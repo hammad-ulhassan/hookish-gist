@@ -38,7 +38,7 @@ export const RoutePaths = () => {
         <Route path="edit">
           <Route
             path=":id"
-            element={<EditGist selectedGistAllData={selectedGistAllData} />}
+            element={<EditGist/>}
           />
         </Route>
         <Route path="/login" element={<LoginPage/>}/>

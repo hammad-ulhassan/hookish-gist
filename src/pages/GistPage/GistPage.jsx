@@ -23,7 +23,7 @@ import {
 } from "../../redux/credentialStore/selectors";
 
 export const GistPage = () => {
-  const [loaded, setLoaded] = useState(false); 
+  const [loaded, setLoaded] = useState(false);
   const navigate = useNavigate();
   const [showPersonalControls, setShowPersonalControls] = useState(false);
   const selectedGist = useSelector(selectSelectedGist);
@@ -54,13 +54,16 @@ export const GistPage = () => {
       setLoaded(false);
     } else {
       setLoaded(true);
-      if (isLoggedIn === true) {
-        if (authUserData?.id === gistAllData?.owner?.id) {
-          setShowPersonalControls(true);
-        }
-      }
     }
   }, [selectedGistAllDataStatus]);
+
+  useEffect(() => {
+    if (selectedGistAllDataStatus === 'succeeded' && isLoggedIn === true) {
+      if (authUserData?.id === gistAllData?.owner?.id) {
+        setShowPersonalControls(true);
+      }
+    }
+  }, [gistAllData, selectedGistAllDataStatus, authUserData, isLoggedIn]);
 
   // useMemo(() => {
   //   if (isLoggedIn === true) {
